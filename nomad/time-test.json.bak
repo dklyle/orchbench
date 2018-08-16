@@ -1,0 +1,34 @@
+{
+  "Job": {
+    "ID": "hello",
+    "Type": "service",
+    "Datacenters": [
+      "dc1"
+    ],
+
+    "TaskGroups": [{
+      "Name": "hello",
+      "Count": 1,
+    
+      "Tasks": [{
+	"Name": "hello",
+        "Driver": "docker",
+        "Config": {
+          "image": "dklyle/hello-node:v2",
+	  "port_map": [{
+	    "http": 8080
+          }]
+        }
+      }],
+
+      "Resources": {
+       "Networks": [{
+         "DynamicPorts": [{
+	   "Label": "http",
+	   "Value": 0
+         }]
+       }]
+      }
+    }]
+  }
+}

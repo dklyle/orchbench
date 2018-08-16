@@ -1,0 +1,1 @@
+sudo ./nomad agent -config client1.hcl &

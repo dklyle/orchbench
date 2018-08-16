@@ -1,0 +1,39 @@
+TOTAL=0
+ITERATIONS=10
+for i in `seq 1 $ITERATIONS`;
+do
+	START=$(date +%s%N | cut -b1-13)
+	echo "start $START"
+
+	# start the service
+	docker stack deploy -c docker-compose.yml hello-node
+	if [ $? -ne 0 ]; then
+		echo "docker stack deploy failed"
+		exit
+	fi
+	
+	sleep 4
+ 
+	END=$(curl http://10.0.0.102:8080 | cut -c 14-)
+	DIFF=$((END-START))
+
+	echo "total milliseconds: $DIFF"
+
+	TOTAL=$(( $TOTAL + $DIFF ))
+	
+	echo "--------------------"
+	echo "cleaning up"
+	docker stack rm hello-node
+ 	if [ $? -ne 0 ]; then
+		echo "docker stack rm failed"
+		exit
+	fi
+
+	sleep 20
+done
+
+echo "--------------------"
+AVERAGE=$(( $TOTAL / $ITERATIONS ))
+echo "Iterations: $ITERATIONS"
+echo "Average milliseconds: $AVERAGE"
+echo "--------------------"

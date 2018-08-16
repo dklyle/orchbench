@@ -1,0 +1,61 @@
+TOTAL=0
+ITERATIONS=1
+for i in `seq 1 $ITERATIONS`;
+do
+        START=$(date +%s%N | cut -b1-13)
+        echo "start $START"
+
+	curl http://localhost:4646/v1/jobs -XPOST -H 'Content-Type: application/json' -d@hello.json
+	if [ $? -ne 0 ]; then
+                echo "curl job run failed"
+                exit
+        fi
+
+	
+	STATUS=$(./nomad job status hello | grep -A 2 "Allocations" | tail -n 1 | awk '{ print $6 }')
+	echo "STATUS: $STATUS ----------------"
+	COUNTER=0
+	while [ "$STATUS" != "running" ] && [ "$STATUS" != "failed" ] && [ $COUNTER -lt 15 ]; do
+        	sleep 10
+		let COUNTER+=1
+		STATUS=$(./nomad job status hello | grep -A 2 "Allocations" | tail -n 1 | awk '{ print $6 }')
+		echo "Status: $STATUS"
+	done
+	
+	if [ $COUNTER == 14 ]; then
+		echo "Too many attempts and not running"
+		exit
+        fi
+
+	ALLOC_ID=$(./nomad job status hello | grep -A 2 "Allocations" | tail -n 1 | awk '{ print $1 }')
+	echo "ALLOC ID=$ALLOC_ID"
+
+	IP=$(./nomad alloc status $ALLOC_ID | grep -A 2 "Task Resources" | tail -n 1 | awk '{printf $10}')
+	echo "IP=$IP"
+
+	END=$(curl http://$IP | cut -c 14-)
+	echo "end $END"
+
+        DIFF=$((END-START))
+
+        echo "total milliseconds: $DIFF"
+
+        TOTAL=$(( $TOTAL + $DIFF ))
+
+	echo "--------------------"
+        echo "cleaning up"
+        ./nomad job stop hello
+        if [ $? -ne 0 ]; then
+                echo "nomad job stop failed"
+                exit
+        fi
+
+        sleep 2
+done
+echo "--------------------"
+AVERAGE=$(( $TOTAL / $ITERATIONS ))
+echo "Iterations: $ITERATIONS"
+echo "Average milliseconds: $AVERAGE"
+echo "--------------------"
+
+

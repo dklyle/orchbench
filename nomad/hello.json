@@ -1,0 +1,138 @@
+{
+    "Job": {
+        "AllAtOnce": false,
+        "Constraints": null,
+        "CreateIndex": 2721,
+        "Datacenters": [
+            "dc1"
+        ],
+        "Dispatched": false,
+        "ID": "hello",
+        "JobModifyIndex": 2994,
+        "Meta": null,
+        "Migrate": null,
+        "ModifyIndex": 3004,
+        "Name": "hello",
+        "Namespace": "default",
+        "ParameterizedJob": null,
+        "ParentID": "",
+        "Payload": null,
+        "Periodic": null,
+        "Priority": 50,
+        "Region": "global",
+        "Reschedule": null,
+        "Stable": true,
+        "Status": "running",
+        "StatusDescription": "",
+        "Stop": false,
+        "SubmitTime": 1533852137052483287,
+        "TaskGroups": [
+            {
+                "Constraints": null,
+                "Count": 1,
+                "EphemeralDisk": {
+                    "Migrate": false,
+                    "SizeMB": 300,
+                    "Sticky": false
+                },
+                "Meta": null,
+                "Migrate": {
+                    "HealthCheck": "checks",
+                    "HealthyDeadline": 300000000000,
+                    "MaxParallel": 1,
+                    "MinHealthyTime": 10000000000
+                },
+                "Name": "hello",
+                "ReschedulePolicy": {
+                    "Attempts": 0,
+                    "Delay": 30000000000,
+                    "DelayFunction": "exponential",
+                    "Interval": 0,
+                    "MaxDelay": 3600000000000,
+                    "Unlimited": true
+                },
+                "RestartPolicy": {
+                    "Attempts": 2,
+                    "Delay": 15000000000,
+                    "Interval": 1800000000000,
+                    "Mode": "fail"
+                },
+                "Tasks": [
+                    {
+                        "Artifacts": null,
+                        "Config": {
+                            "image": "dklyle/hello-node:v2",
+                            "port_map": [
+                                {
+                                    "http": 8080.0
+                                }
+                            ]
+                        },
+                        "Constraints": null,
+                        "DispatchPayload": null,
+                        "Driver": "docker",
+                        "Env": null,
+                        "KillSignal": "",
+                        "KillTimeout": 5000000000,
+                        "Leader": false,
+                        "LogConfig": {
+                            "MaxFileSizeMB": 10,
+                            "MaxFiles": 10
+                        },
+                        "Meta": null,
+                        "Name": "hello",
+                        "Resources": {
+                            "CPU": 100,
+                            "DiskMB": 0,
+                            "IOPS": 0,
+                            "MemoryMB": 300,
+                            "Networks": [
+                                {
+                                    "CIDR": "",
+                                    "Device": "",
+                                    "DynamicPorts": [
+                                        {
+                                            "Label": "http",
+                                            "Value": 0
+                                        }
+                                    ],
+                                    "IP": "",
+                                    "MBits": 10,
+                                    "ReservedPorts": null
+                                }
+                            ]
+                        },
+                        "Services": null,
+                        "ShutdownDelay": 0,
+                        "Templates": null,
+                        "User": "",
+                        "Vault": null
+                    }
+                ],
+                "Update": {
+                    "AutoRevert": false,
+                    "Canary": 0,
+                    "HealthCheck": "checks",
+                    "HealthyDeadline": 180000000000,
+                    "MaxParallel": 1,
+                    "MinHealthyTime": 10000000000,
+                    "ProgressDeadline": 600000000000,
+                    "Stagger": 30000000000
+                }
+            }
+        ],
+        "Type": "service",
+        "Update": {
+            "AutoRevert": false,
+            "Canary": 0,
+            "HealthCheck": "",
+            "HealthyDeadline": 0,
+            "MaxParallel": 1,
+            "MinHealthyTime": 0,
+            "ProgressDeadline": 0,
+            "Stagger": 30000000000
+        },
+        "VaultToken": "",
+        "Version": 13
+    }
+}
