@@ -21,7 +21,7 @@
         "automountServiceAccountToken": false,
         "containers": [{
           "name": "hello-go",
-          "image": "spoussa/hello-go:latest",
+          "image": "spoussa/hello-go:v2",
           "ports": [{
             "containerPort": 8080
           }]
