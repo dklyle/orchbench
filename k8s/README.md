@@ -1,17 +1,38 @@
 ## Cluster config
 
+### scripted cluster set up
 To set up a k8s cluster you can use `kube-master-init.sh` and `kube-client-init.sh`
 
-### kube-master-init.sh
+Make sure the nodes are ready for install
+```sh
+$ k8s-clean.sh
+```
+
+Time the bring up of the master and client nodes in one script
+```sh
+$ k8s-up.sh
+```
+
+### configure the master and clients separately (untimed)
+
+#### kube-master-init.sh
 
 * assumes sudo access
 * will use `kubeadm` to set up the cluster with weave
 
-### kube-client-init.sh
+```sh
+./kube-master-init.sh
+```
+
+#### kube-client-init.sh
 
 * will configure all systems in `kclients`
 * assumes `mussh` is installed on the system it is executed on
 * assumes passwordless ssh is configured to `kclients`
+
+```sh
+./kube-client-init.sh <IP:port> --token <token> --discovery-token-ca-cert-hash <discovery-token-ca-cert-hash>
+```
 
 ## Testing
 

@@ -3,4 +3,4 @@ kind: MasterConfiguration
 controllerManagerExtraArgs:
   horizontal-pod-autoscaler-use-rest-clients: "true"
   horizontal-pod-autoscaler-sync-period: "10s"
-kubernetesVersion: "stable-1.10"
+kubernetesVersion: "stable-1.11"
