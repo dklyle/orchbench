@@ -1,7 +1,6 @@
 ## Cluster config
 
 ### scripted cluster set up
-To set up a k8s cluster you can use `kube-master-init.sh` and `kube-client-init.sh`
 
 Make sure the nodes are ready for install
 ```sh
@@ -14,6 +13,8 @@ $ k8s-up.sh
 ```
 
 ### configure the master and clients separately (untimed)
+
+To set up a k8s cluster you can use `kube-master-init.sh` and `kube-client-init.sh`
 
 #### kube-master-init.sh
 
