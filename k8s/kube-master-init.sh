@@ -46,4 +46,8 @@ fi
 #    exit
 #fi
 
+# allow user pods to run on master
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+# allow access to API without token
 kubectl proxy --port=8090 &
