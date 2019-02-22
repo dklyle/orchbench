@@ -1,0 +1,72 @@
+if [[ $# != 1 ]]; then
+  echo "usage: $0 json-file"
+  exit
+fi
+
+NAME=$(echo $1 | cut -d'.' -f 1)
+
+TOTAL=0
+ITERATIONS=2
+SLEEP=3
+for i in `seq 1 $ITERATIONS`;
+do
+    START=$(date +%s%N | cut -b1-13)
+    echo "start $START"
+
+     curl -s http://localhost:8090/apis/apps/v1/namespaces/default/deployments -XPOST -H 'Content-Type: application/json' -d@$1 > /dev/null
+     if [ $? -ne 0 ]; then
+        echo "curl create deployment failed"
+        exit
+    fi
+
+    kubectl expose deployment $NAME
+    if [ $? -ne 0 ]; then
+        echo "kubectl expose failed"
+        exit
+    fi
+
+    #sleep $SLEEP
+    while [ $? -ne 0 ]; do
+        kubectl get services $NAME -n default --no-headers=true
+    done
+	IP=$(kubectl get services $NAME -n default --no-headers=true | awk '{printf $3}')
+    NET_END=$(date +%s%N | cut -b1-13)
+	
+    echo "IP=$IP"
+
+	RESP=$(curl -s --noproxy "*" http://$IP:8080)
+	echo $RESP
+	END=$(echo $RESP | cut -c 14-)
+	echo "end $END"
+
+    DIFF=$((END-START))
+    NET_DIFF=$((NET_END-START))
+
+    echo "total milliseconds: $DIFF"
+    echo "total net milliseconds: $NET_DIFF"
+
+    TOTAL=$(( $TOTAL + $DIFF ))
+
+	echo "--------------------"
+    echo "cleaning up"
+    kubectl delete service $NAME
+    if [ $? -ne 0 ]; then
+        echo "kubectl delete service failed"
+        exit
+    fi
+
+    kubectl delete deployment $NAME
+    if [ $? -ne 0 ]; then
+        echo "kubectl delete deployment failed"
+        exit
+    fi
+
+    sleep $SLEEP
+done
+echo "--------------------"
+AVERAGE=$(( $TOTAL / $ITERATIONS ))
+echo "Iterations: $ITERATIONS"
+echo "Average milliseconds: $AVERAGE"
+echo "--------------------"
+
+
